@@ -37,7 +37,6 @@ class Input extends Component {
     const reqBody = {
       text: event.target.text.value,
       recipientId: this.props.otherUser.id,
-      conversationId: this.props.conversationId,
       sender: this.props.conversationId ? null : this.props.user,
     };
     await this.props.postMessage(reqBody);
