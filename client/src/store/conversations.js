@@ -75,12 +75,10 @@ const reducer = (state = [], action) => {
       return action.conversations;
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
-    case ADD_ONLINE_USER: {
+    case ADD_ONLINE_USER: 
       return addOnlineUserToStore(state, action.id);
-    }
-    case REMOVE_OFFLINE_USER: {
+    case REMOVE_OFFLINE_USER: 
       return removeOfflineUserFromStore(state, action.id);
-    }
     case SET_SEARCHED_USERS:
       return addSearchedUsersToStore(state, action.users);
     case CLEAR_SEARCHED_USERS:
