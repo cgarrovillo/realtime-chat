@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Conversation, Message } = require('../../db/models');
 const onlineUsers = require('../../onlineUsers');
 
-// expects {recipientId, text, sender} in body 
+// expects {recipientId, text, sender} in body
 router.post('/', async (req, res, next) => {
   try {
     if (!req.user) {
@@ -13,7 +13,7 @@ router.post('/', async (req, res, next) => {
 
     // if the senderId decoded from the JWT does not match that of the sender's id, consider the request invalid
     if (senderId !== sender.id) {
-      return res.sendStatus(400)
+      return res.sendStatus(400);
     }
 
     // find the conversation containing the senderId (decoded from JWT) & the recipient Id
@@ -25,7 +25,7 @@ router.post('/', async (req, res, next) => {
         user1Id: senderId,
         user2Id: recipientId,
       });
-      if (sender !== null && onlineUsers.includes(sender.id)) {
+      if (sender !== null && onlineUsers.has(sender.id)) {
         sender.online = true;
       }
     }
