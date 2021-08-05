@@ -1,9 +1,9 @@
-const router = require('express').Router();
-const { Conversation, Message } = require('../../db/models');
-const onlineUsers = require('../../onlineUsers');
+const router = require("express").Router();
+const { Conversation, Message } = require("../../db/models");
+const onlineUsers = require("../../onlineUsers");
 
 // expects {recipientId, text, sender} in body 
-router.post('/', async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -11,7 +11,7 @@ router.post('/', async (req, res, next) => {
     const senderId = req.user.id;
     const { recipientId, text, sender } = req.body;
 
-    // if the senderId decoded from the JWT does not match that of the sender's id, consider the request invalid
+    // if the senderId decoded from the JWT does not match that of the sender"s id, consider the request invalid
     if (senderId !== sender.id) {
       return res.sendStatus(400)
     }
@@ -20,7 +20,7 @@ router.post('/', async (req, res, next) => {
     let conversation = await Conversation.findConversation(senderId, recipientId);
 
     if (!conversation) {
-      // create conversation if it doesn't exist already
+      // create conversation if it doesn"t exist already
       conversation = await Conversation.create({
         user1Id: senderId,
         user2Id: recipientId,
