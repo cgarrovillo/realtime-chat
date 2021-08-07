@@ -6,7 +6,7 @@ const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const db = require("./db");
 
-const verifyToken = require('./middleware/verifyToken')
+const verifyTokenExpress = require('./middleware/verifyTokenExpress')
 const errorHandler = require('./middleware/errorHandler')
 
 // create store for sessions to persist in database
@@ -22,7 +22,7 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(join(__dirname, "public")));
 
-app.use(verifyToken);
+app.use(verifyTokenExpress);
 
 // require api routes here after I create them
 app.use("/auth", require("./routes/auth"));

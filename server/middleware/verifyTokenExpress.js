@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../db/models");
 
-const verifyToken = (req, res, next) => {
+const verifyTokenExpress = (req, res, next) => {
   const token = req.headers["x-access-token"];
   if (token) {
     jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
@@ -20,4 +20,4 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-module.exports = verifyToken
+module.exports = verifyTokenExpress
