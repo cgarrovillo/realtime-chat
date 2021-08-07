@@ -26,5 +26,9 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^8.2.1"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.3",
+    "utf-8-validate": "^5.0.5"
   }
 }
