@@ -10,7 +10,7 @@ require("dotenv").config();
 const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
-const onlineUsers = require("../util/onlineUsers");
+const { attachListeners } = require("../util/socket");
 
 /**
  * Get port from environment and store in Express.
@@ -28,43 +28,9 @@ const server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces, and sync database.
  */
-
 const { Server } = require("socket.io");
 const io = new Server(server);
-
-io.on("connection", socket => {
-  socket.on("go-online", id => {
-    // keep track of multiple connections; multiple browser-tabs of the user
-    let otherConnections = [];
-    if (onlineUsers.has(id)) {
-      otherConnections = onlineUsers.get(id);
-    }
-
-    otherConnections.push(socket.id)
-    onlineUsers.set(id, otherConnections);
-    // send the user who just went online to everyone else who is already online
-    socket.broadcast.emit("add-online-user", id);
-  });
-
-  socket.on("new-message", data => {
-    const recipientSocketIds = onlineUsers.get(data.recipientId)
-
-    if (recipientSocketIds) {
-      // .to() takes in arrays as of socket.io 4.x
-      socket.to(recipientSocketIds).emit("new-message", {
-        message: data.message,
-        sender: data.sender,
-      });
-    }
-  });
-
-  socket.on("logout", id => {
-    if (onlineUsers.has(id)) {
-      onlineUsers.delete(id);
-      socket.broadcast.emit("remove-offline-user", id);
-    }
-  });
-});
+io.on('connection', socket => attachListeners(socket));
 
 sessionStore
   .sync()
@@ -111,11 +77,9 @@ function onError(error) {
     case "EACCES":
       console.error(bind + " requires elevated privileges");
       process.exit(1);
-      break;
     case "EADDRINUSE":
       console.error(bind + " is already in use");
       process.exit(1);
-      break;
     default:
       throw error;
   }
