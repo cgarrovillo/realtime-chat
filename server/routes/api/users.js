@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { User } = require("../../db/models");
 const { Op } = require("sequelize");
-const onlineUsers = require("../../onlineUsers");
+const onlineUsers = require("../../util/onlineUsers");
 
 // find users by username
 router.get("/:username", async (req, res, next) => {

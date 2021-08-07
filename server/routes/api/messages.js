@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Conversation, Message } = require('../../db/models');
-const onlineUsers = require('../../onlineUsers');
+const onlineUsers = require('../../util/onlineUsers');
 
 // expects {recipientId, text, sender} in body
 router.post('/', async (req, res, next) => {
