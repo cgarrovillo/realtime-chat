@@ -21,9 +21,9 @@ router.post("/register", async (req, res, next) => {
 
     const user = await User.create(req.body);
 
-    const token = jwtSign(user.dataValues.id)
+    const token = jwtSign(user.getDataValue('id'))
     res.json({
-      ...user.dataValues,
+      ...user.get(),
       token,
     });
   } catch (error) {
@@ -55,9 +55,9 @@ router.post("/login", async (req, res, next) => {
       console.log({ error: "Wrong username and/or password" });
       res.status(401).json({ error: "Wrong username and/or password" });
     } else {
-      const token = jwtSign(user.dataValues.id)
+      const token = jwtSign(user.getDataValue('id'))
       res.json({
-        ...user.dataValues,
+        ...user.get(),
         token,
       });
     }
@@ -66,11 +66,11 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.delete("/logout", (req, res, next) => {
+router.delete("/logout", (req, res) => {
   res.sendStatus(204);
 });
 
-router.get("/user", (req, res, next) => {
+router.get("/user", (req, res) => {
   if (req.user) {
     return res.json(req.user);
   } else {
