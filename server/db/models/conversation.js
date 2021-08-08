@@ -24,7 +24,6 @@ Conversation.findConversation = async function (user1Id, user2Id) {
 Conversation.findConversationById = async function (conversationId) {
   if (!conversationId) return null
 
-
   const conversation = await Conversation.findByPk(conversationId)
   return conversation
 }
