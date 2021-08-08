@@ -10,7 +10,8 @@ require("dotenv").config();
 const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
-const { attachListeners } = require("../util/socket");
+const addSocketListeners = require("../helpers/addSocketListeners");
+const verifyTokenSocket = require("../middleware/verifyTokenSocket")
 
 /**
  * Get port from environment and store in Express.
@@ -30,7 +31,8 @@ const server = http.createServer(app);
  */
 const { Server } = require("socket.io");
 const io = new Server(server);
-io.on('connection', socket => attachListeners(socket));
+io.use(verifyTokenSocket)
+io.on('connection', socket => addSocketListeners(socket));
 
 sessionStore
   .sync()
