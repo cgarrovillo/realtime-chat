@@ -1,7 +1,24 @@
-const { Op } = require("sequelize");
+const { Op, INTEGER} = require("sequelize");
 const db = require("../db");
 
-const Conversation = db.define("conversation", {});
+const Conversation = db.define("conversation", {
+  user1Id: {
+    type: INTEGER,
+    allowNull: false
+  },
+  user2Id: {
+    type: INTEGER,
+    allowNull: false
+  },
+  user1UnreadCount: {
+    type: INTEGER,
+    allowNull: false
+  },
+  user2UnreadCount: {
+    type: INTEGER,
+    allowNull: false
+  },
+});
 
 // find conversation given two user Ids
 

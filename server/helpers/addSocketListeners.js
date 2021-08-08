@@ -1,5 +1,7 @@
 const onlineUsers = require("../util/onlineUsers");
 const verifyTokenSocketPacket = require('../middleware/verifyTokenSocketPacket');
+const { resetUnreadCount } = require('./updateUnreadCount');
+const { Conversation } = require('../db/models');
 
 const addSocketListeners = socket => {
   socket.use((event, next) => verifyTokenSocketPacket(socket, next))
@@ -24,7 +26,17 @@ const addSocketListeners = socket => {
         socket.broadcast.emit('remove-offline-user', userId);
       }
     }
-  })
+  });
+
+  socket.on('read-message', async (data) => {
+    // reset other user's unread count in db to 0
+    const conversation = await Conversation.findConversationById(data.conversationId)
+
+    if (conversation) {
+      const { id } = data.user
+      resetUnreadCount(id, conversation.get())
+    }
+  });
 };
 
 module.exports = addSocketListeners;
