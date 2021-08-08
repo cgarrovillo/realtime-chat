@@ -25,12 +25,7 @@ Conversation.findConversationById = async function (conversationId) {
   if (!conversationId) return null
 
 
-  const conversation = await Conversation.findOne({
-    where: {
-      id: conversationId
-    }
-  })
-
+  const conversation = await Conversation.findByPk(conversationId)
   return conversation
 }
 
