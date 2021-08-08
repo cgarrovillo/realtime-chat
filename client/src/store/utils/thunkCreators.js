@@ -1,7 +1,7 @@
 import axios from "axios";
 import socket from "../../utils/socket";
 import {
-  gotConversations,
+  getConversations,
   addConversation,
   setNewMessage,
   setSearchedUsers,
@@ -80,7 +80,7 @@ export const logout = (id) => async (dispatch) => {
 export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
-    dispatch(gotConversations(data));
+    dispatch(getConversations(data));
   } catch (error) {
     console.error(error);
   }
@@ -99,7 +99,7 @@ const sendMessage = (data, body) => {
   });
 };
 
-// message format to send: {recipientId, text, conversationId}
+// message format to send: {text, recipientId, conversationId, sender}
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
   try {
@@ -125,3 +125,15 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const readMessage = (user, conversationId) => async (dispatch) => {
+  try {
+    const data = {
+      user,
+      conversationId
+    }
+    socket.emit('read-message', data)
+  } catch (error) {
+    console.error(error)
+  }
+}
