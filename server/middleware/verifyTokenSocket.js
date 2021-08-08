@@ -8,7 +8,6 @@ const verifyTokenSocket = (socket, next) => {
   if (token) {
     jwtVerify(token, (err, decoded) => {
       if (err) {
-        console.error(err)
         return next(new Error("Unauthorized"))
       }
 

@@ -14,7 +14,6 @@ const verifyTokenSocketPacket = (socket, next) => {
       else return next(new Error("Unauthorized"))
     })
   } else {
-    console.error("Unauthorized WS")
     return next(new Error("Unauthorized"));
   }
 };

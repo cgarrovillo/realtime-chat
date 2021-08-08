@@ -15,7 +15,7 @@ const addSocketListeners = socket => {
   });
 
   socket.on('disconnect', () => {
-    const userId = socket.userId
+    const { userId } = socket.userId
     if (onlineUsers.has(userId)) {
       const activeConnections = onlineUsers.get(userId);
 
