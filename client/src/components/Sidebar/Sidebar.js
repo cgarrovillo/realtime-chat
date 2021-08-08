@@ -32,6 +32,8 @@ const Sidebar = (props) => {
       {conversations
         .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
         .sort((prevConvo, nextConvo) => {
+          if (prevConvo.messages.length === 0) return true
+
           const lastMessagePrev = prevConvo.messages[prevConvo.messages.length - 1]
           const lastMessageNext = nextConvo.messages[nextConvo.messages.length - 1]
 
