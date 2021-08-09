@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  resetUnread
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -133,6 +134,7 @@ export const readMessage = (user, conversationId) => async (dispatch) => {
       conversationId
     }
     socket.emit('read-message', data)
+    dispatch(resetUnread(conversationId))
   } catch (error) {
     console.error(error)
   }

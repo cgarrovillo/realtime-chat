@@ -7,14 +7,11 @@ import { readMessage } from '../../store/utils/thunkCreators';
 
 const Messages = ({user, conversation, readMessage}) => {
   const { id: userId } = user
-  const { messages, otherUser} = conversation;
+  const { messages, otherUser, id: conversationId} = conversation;
 
   useEffect(() => {
-    // whole conversation object is kept as dependency instead of destructuring id when passed,
-    // since we need to keep track of conversation object updates
-    const conversationId = conversation.id
     readMessage(user, conversationId)
-  }, [readMessage, user, conversation])
+  }, [readMessage, user, conversationId, messages])
 
   return (
     <Box>

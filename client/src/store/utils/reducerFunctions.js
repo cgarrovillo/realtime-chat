@@ -1,3 +1,4 @@
+// used by both sending & receiving messages logic
 export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   const existingConversationIndex = state.findIndex(convo => convo.id === message.conversationId)
@@ -7,9 +8,10 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      latestMessageText: message.text,
+      unreadCount: 0
     };
-    newConvo.latestMessageText = message.text;
-    newConvo.unreadCount++;
+    if (sender) newConvo.unreadCount++
     return [newConvo, ...state];
   }
   
@@ -18,7 +20,7 @@ export const addMessageToStore = (state, payload) => {
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
-      convoCopy.unreadCount++;
+      if (sender) convoCopy.unreadCount++
       return convoCopy;
     } else {
       return convo;
@@ -83,3 +85,15 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const resetUnreadCount = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const newConvo = { ...convo };
+      newConvo.unreadCount = 0
+      return newConvo;
+    } else {
+      return convo;
+    }
+  });
+}
