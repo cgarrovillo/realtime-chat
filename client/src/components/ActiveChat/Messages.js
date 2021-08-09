@@ -7,11 +7,11 @@ import { readMessage } from '../../store/utils/thunkCreators';
 
 const Messages = ({user, conversation, readMessage}) => {
   const { id: userId } = user
-  const { messages, otherUser, id: conversationId} = conversation;
+  const { id: conversationId, messages, otherUser, latestMessageText} = conversation;
 
   useEffect(() => {
     readMessage(user, conversationId)
-  }, [readMessage, user, conversationId, messages])
+  }, [readMessage, user, conversationId, latestMessageText])
 
   return (
     <Box>
