@@ -31,6 +31,18 @@ const Sidebar = (props) => {
       <Search handleChange={handleChange} />
       {conversations
         .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
+        .sort((prevConvo, nextConvo) => {
+          if (prevConvo.messages.length === 0) return true
+          if (nextConvo.messages.length === 0) return true
+
+          const lastMessagePrev = prevConvo.messages[prevConvo.messages.length - 1]
+          const lastMessageNext = nextConvo.messages[nextConvo.messages.length - 1]
+
+          const messageDatePrev = new Date(lastMessagePrev.createdAt)
+          const messageDateNext = new Date(lastMessageNext.createdAt)
+
+          return messageDatePrev < messageDateNext
+        })
         .map((conversation) => {
           return <Chat conversation={conversation} key={conversation.otherUser.username} />;
         })}
