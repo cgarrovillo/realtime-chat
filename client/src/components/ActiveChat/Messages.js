@@ -9,8 +9,8 @@ const Messages = ({user, conversation, readMessage}) => {
   const { id: userId } = user
   const { id: conversationId, messages, otherUser, latestMessageText, unreadCount} = conversation;
   // TODO: optimize into a latestMessage object
-  const latestMessageIndex = messages.length - 1
-  const latestMessageSenderId = messages[latestMessageIndex].senderId
+  const latestMessageIndex = messages.length !== 0 ? messages.length - 1 : 0
+  const latestMessageSenderId = messages[latestMessageIndex]?.senderId
 
   useEffect(() => {
     readMessage(user, conversationId)
