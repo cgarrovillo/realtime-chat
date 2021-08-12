@@ -53,12 +53,19 @@ router.get("/", async (req, res, next) => {
       const convoJSON = convo.get();
 
       // set a property "otherUser" so that frontend will have easier access
-      // also set the unread count here
       if (convoJSON.user1) {
         convoJSON.otherUser = convoJSON.user1;
+
+        // whether the other user has seen *this* user's messages
+        convoJSON.seen = convoJSON.user1UnreadCount === 0
+        // set *this* user's unread count
         convoJSON.unreadCount = convoJSON.user2UnreadCount
       } else if (convoJSON.user2) {
         convoJSON.otherUser = convoJSON.user2;
+
+        // whether the other user has seen *this* user's messages
+        convoJSON.seen = convoJSON.user2UnreadCount === 0
+        // set *this* user's unread count
         convoJSON.unreadCount = convoJSON.user1UnreadCount
       }
       delete convoJSON.user1;

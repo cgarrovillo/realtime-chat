@@ -7,14 +7,14 @@ import { SenderBubble, OtherUserBubble, ReadReceipt } from "../ActiveChat";
 
 const Messages = ({user, conversation, readMessage}) => {
   const { id: userId } = user
-  const { id: conversationId, messages, otherUser, latestMessageText, unreadCount} = conversation;
+  const { id: conversationId, messages, otherUser, latestMessageText, seen} = conversation;
   // TODO: optimize into a latestMessage object
   const latestMessageIndex = messages.length !== 0 ? messages.length - 1 : 0
   const latestMessageSenderId = messages[latestMessageIndex]?.senderId
 
   useEffect(() => {
-    readMessage(user, conversationId)
-  }, [readMessage, user, conversationId, latestMessageText])
+    readMessage(user, otherUser, conversationId)
+  }, [readMessage, user, otherUser, conversationId, latestMessageText, seen])
 
   return (
     <Box>
@@ -27,15 +27,15 @@ const Messages = ({user, conversation, readMessage}) => {
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );
       })}
-      {userId === latestMessageSenderId && <ReadReceipt otherUser={otherUser} unreadCount={unreadCount}/>}
+      {userId === latestMessageSenderId && <ReadReceipt otherUser={otherUser} seen={seen}/>}
     </Box>
   );
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    readMessage: (user, conversationId) => {
-      dispatch(readMessage(user, conversationId))
+    readMessage: (user, otherUser, conversationId) => {
+      dispatch(readMessage(user, otherUser, conversationId))
     }
   };
 };

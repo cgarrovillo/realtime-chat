@@ -127,10 +127,11 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const readMessage = (user, conversationId) => async (dispatch) => {
+export const readMessage = (user, otherUser, conversationId) => async (dispatch) => {
   try {
     const data = {
       user,
+      otherUser,
       conversationId
     }
     socket.emit('read-message', data)

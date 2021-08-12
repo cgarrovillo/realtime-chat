@@ -33,8 +33,13 @@ const addSocketListeners = socket => {
     const conversation = await Conversation.findConversationById(data.conversationId)
 
     if (conversation) {
-      const { id } = data.user
-      resetUnreadCount(id, conversation.get())
+      const {user, otherUser} = data
+      resetUnreadCount(user.id, conversation.get())
+      
+      const recipientSocketIds = onlineUsers.get(otherUser.id);
+      if (recipientSocketIds) {
+        socket.to(recipientSocketIds).emit('read-message', data);
+      }
     }
   });
 };

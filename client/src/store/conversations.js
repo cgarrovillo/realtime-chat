@@ -4,7 +4,8 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
-  resetUnreadCount
+  resetUnreadCount,
+  changeReadReceipt
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -17,6 +18,7 @@ const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
 const RESET_UNREAD = "RESET_UNREAD"
+const SET_READ_RECEIPT = "SET_READ_RECEIPT"
 
 // ACTION CREATORS
 
@@ -76,6 +78,13 @@ export const resetUnread = (conversationId) => {
   }
 }
 
+export const setReadReceipt = (data) => {
+  return {
+    type: SET_READ_RECEIPT,
+    payload: { data }
+  }
+}
+
 // REDUCER
 
 const reducer = (state = [], action) => {
@@ -100,6 +109,8 @@ const reducer = (state = [], action) => {
       );
     case RESET_UNREAD: 
       return resetUnreadCount(state, action.payload.conversationId)
+    case SET_READ_RECEIPT:
+      return changeReadReceipt(state, action.payload.data)
     default:
       return state;
   }
