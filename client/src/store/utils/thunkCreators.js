@@ -129,12 +129,17 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 
 export const readMessage = (user, otherUser, conversationId) => async (dispatch) => {
   try {
-    const data = {
-      user,
-      otherUser,
-      conversationId
-    }
-    socket.emit('read-message', data)
+    // const data = {
+    //   user,
+    //   otherUser,
+    //   conversationId
+    // }
+    
+    // API call to /messages to change the read status of a message
+    // Should be similar to postMessage in functionality;  API call first, Socket second
+    // socket emit
+    
+    // reset this client's displayed read count
     dispatch(resetUnread(conversationId))
   } catch (error) {
     console.error(error)

@@ -9,10 +9,10 @@ export const addMessageToStore = (state, payload) => {
       otherUser: sender,
       messages: [message],
       latestMessageText: message.text,
-      unreadCount: 0,
-      seen: false
     };
-    if (sender) newConvo.unreadCount++
+    // add an unreadCount property on the convo,  but based off of messages with a "seen" property false
+    // ---
+
     return [newConvo, ...state];
   }
   
@@ -23,7 +23,9 @@ export const addMessageToStore = (state, payload) => {
       convoCopy.latestMessageText = message.text;
       convoCopy.seen = false
 
-      if (sender) convoCopy.unreadCount++
+      // add an unreadCount property on the convo,  but based off of messages with a "seen" property false
+      // ---
+
       return convoCopy;
     } else {
       return convo;
@@ -102,14 +104,8 @@ export const resetUnreadCount = (state, conversationId) => {
 }
 
 export const changeReadReceipt = (state, data) => {
-  const conversationId = data.conversationId
+  // Called after listening to a read-message event
+  // find conversation in `state` using the conversationId of `data`
+  // set all `seen` properties of all messages to `true
 
-  return state.map((convo) => {
-    if (convo.id === conversationId) {
-      convo.seen = true
-      return convo
-    } else {
-      return convo;
-    }
-  });
 }

@@ -10,14 +10,6 @@ const Conversation = db.define("conversation", {
     type: INTEGER,
     allowNull: false
   },
-  user1UnreadCount: {
-    type: INTEGER,
-    allowNull: false
-  },
-  user2UnreadCount: {
-    type: INTEGER,
-    allowNull: false
-  },
 });
 
 // find conversation given two user Ids

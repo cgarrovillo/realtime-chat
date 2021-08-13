@@ -3,18 +3,15 @@ import { Box } from "@material-ui/core";
 import moment from "moment";
 import { connect } from "react-redux";
 import { readMessage } from '../../store/utils/thunkCreators';
-import { SenderBubble, OtherUserBubble, ReadReceipt } from "../ActiveChat";
+import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 
 const Messages = ({user, conversation, readMessage}) => {
   const { id: userId } = user
-  const { id: conversationId, messages, otherUser, latestMessageText, seen} = conversation;
-  // TODO: optimize into a latestMessage object
-  const latestMessageIndex = messages.length !== 0 ? messages.length - 1 : 0
-  const latestMessageSenderId = messages[latestMessageIndex]?.senderId
+  const { id: conversationId, messages, otherUser} = conversation;
 
   useEffect(() => {
     readMessage(user, otherUser, conversationId)
-  }, [readMessage, user, otherUser, conversationId, latestMessageText, seen])
+  }, [readMessage, user, otherUser, conversationId])
 
   return (
     <Box>
@@ -27,7 +24,6 @@ const Messages = ({user, conversation, readMessage}) => {
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );
       })}
-      {userId === latestMessageSenderId && <ReadReceipt otherUser={otherUser} seen={seen}/>}
     </Box>
   );
 };

@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { Conversation, Message } = require('../../db/models');
 const onlineUsers = require('../../util/onlineUsers');
-const { updateUnreadCount } = require('../../helpers/updateUnreadCount')
 
 // expects {recipientId, text, sender} in body
 router.post('/', async (req, res, next) => {
@@ -20,8 +19,6 @@ router.post('/', async (req, res, next) => {
       conversation = await Conversation.create({
         user1Id: senderId,
         user2Id: recipientId,
-        user1UnreadCount: 0,
-        user2UnreadCount: 0
       });
       if (onlineUsers.has(sender.id)) {
         sender.online = true;
@@ -33,9 +30,6 @@ router.post('/', async (req, res, next) => {
       }
     }
     
-    // update recipient unread count
-    updateUnreadCount(recipientId, conversation.get())
-
     const message = await Message.create({
       senderId,
       text,
