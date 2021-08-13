@@ -9,28 +9,27 @@ export const addMessageToStore = (state, payload) => {
       otherUser: sender,
       messages: [message],
       latestMessageText: message.text,
+      unreadCount: 0
     };
     // add an unreadCount property on the convo,  but based off of messages with a "seen" property false
     // ---
+    if (sender) newConvo.unreadCount++
 
     return [newConvo, ...state];
   }
   
-  return state.map((convo) => {
-    if (convo.id === message.conversationId) {
-      const convoCopy = { ...convo };
-      convoCopy.messages.push(message);
-      convoCopy.latestMessageText = message.text;
-      convoCopy.seen = false
+  const stateCopy = [...state]
+  const convoCopy = { ...stateCopy[existingConversationIndex]}
+  convoCopy.messages.push(message);
+  convoCopy.latestMessageText = message.text;
 
-      // add an unreadCount property on the convo,  but based off of messages with a "seen" property false
-      // ---
+  // const unreadMessageCount = convoCopy.messages.filter(message => !message.seen).length
+  // convoCopy.unreadCount = unreadMessageCount
+  if (sender) convoCopy.unreadCount++
+  
+  stateCopy[existingConversationIndex] = convoCopy
 
-      return convoCopy;
-    } else {
-      return convo;
-    }
-  });
+  return stateCopy
 };
 
 export const addOnlineUserToStore = (state, id) => {
@@ -106,6 +105,26 @@ export const resetUnreadCount = (state, conversationId) => {
 export const changeReadReceipt = (state, data) => {
   // Called after listening to a read-message event
   // find conversation in `state` using the conversationId of `data`
-  // set all `seen` properties of all messages to `true
+  const { conversationId } = data
 
+  return state.map(convo => {
+    if (convo.id === conversationId) {
+
+      // set all `seen` properties of all messages to `true
+      const convoCopy = {...convo}
+      const messages = [...convoCopy.messages]
+      const updatedMessages = messages.map(message => {
+        if (message.seen) return message
+
+        const messageCopy = { ...message }
+        messageCopy.seen = true
+        return messageCopy
+      })
+
+      convoCopy.messages = updatedMessages
+      return convoCopy
+    } else {
+      return convo
+    }
+  })
 }

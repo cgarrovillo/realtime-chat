@@ -2,24 +2,31 @@ import React, {useEffect} from "react";
 import { Box } from "@material-ui/core";
 import moment from "moment";
 import { connect } from "react-redux";
-import { readMessage } from '../../store/utils/thunkCreators';
+import { setMessageRead } from '../../store/utils/thunkCreators';
 import { SenderBubble, OtherUserBubble } from "../ActiveChat";
+import ReadReceipt from './ReadReceipt';
 
-const Messages = ({user, conversation, readMessage}) => {
+const Messages = ({ user, conversation, setMessageRead}) => {
   const { id: userId } = user
   const { id: conversationId, messages, otherUser} = conversation;
+  const lastMessageIndex = messages.length - 1;
 
   useEffect(() => {
-    readMessage(user, otherUser, conversationId)
-  }, [readMessage, user, otherUser, conversationId])
+    if (!conversationId) return
+
+    setMessageRead(user, otherUser, conversationId)
+  }, [setMessageRead, user, otherUser, conversationId, lastMessageIndex])
 
   return (
     <Box>
-      {messages.map((message) => {
+      {messages.map((message, index) => {
         const time = moment(message.createdAt).format("h:mm");
 
         return message.senderId === userId ? (
-          <SenderBubble key={message.id} text={message.text} time={time} />
+          <>
+            <SenderBubble key={message.id} text={message.text} time={time} />
+            {!!(index === lastMessageIndex) && <ReadReceipt otherUser={otherUser} message={message} /> }
+          </>
         ) : (
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );
@@ -30,8 +37,8 @@ const Messages = ({user, conversation, readMessage}) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    readMessage: (user, otherUser, conversationId) => {
-      dispatch(readMessage(user, otherUser, conversationId))
+    setMessageRead: (user, otherUser, conversationId) => {
+      dispatch(setMessageRead(user, otherUser, conversationId))
     }
   };
 };

@@ -9,10 +9,7 @@ const addSocketListeners = socket => {
   socket.on('new-message', data => {
     const recipientSocketIds = onlineUsers.get(data.recipientId);
     if (recipientSocketIds) {
-      socket.to(recipientSocketIds).emit('new-message', {
-        message: data.message,
-        sender: data.sender,
-      });
+      socket.to(recipientSocketIds).emit('new-message', data);
     }
   });
 
@@ -31,8 +28,11 @@ const addSocketListeners = socket => {
   socket.on('read-message', async (data) => {
     // Similar to new-message handler;  find the socket to emit a read-message to
     // NO DB calls here.
-
-    
+    const { user, otherUser, conversationId } = data
+    const recipientSocketIds = onlineUsers.get(otherUser.id)
+    if (recipientSocketIds) {
+      socket.to(recipientSocketIds).emit('read-message', data);
+    }
   });
 };
 

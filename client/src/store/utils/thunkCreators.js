@@ -100,6 +100,10 @@ const sendMessage = (data, body) => {
   });
 };
 
+const readMessage = (data) => {
+  socket.emit("read-message", data)
+}
+
 // message format to send: {text, recipientId, conversationId, sender}
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
@@ -127,20 +131,20 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const readMessage = (user, otherUser, conversationId) => async (dispatch) => {
+export const setMessageRead = (user, otherUser, conversationId) => async (dispatch) => {
   try {
-    // const data = {
-    //   user,
-    //   otherUser,
-    //   conversationId
-    // }
-    
     // API call to /messages to change the read status of a message
     // Should be similar to postMessage in functionality;  API call first, Socket second
     // socket emit
+    const convoData = { user, otherUser, conversationId }
+    const { status } = await axios.post(`/api/conversations/read`, convoData)
     
-    // reset this client's displayed read count
-    dispatch(resetUnread(conversationId))
+    if (status === 204) {
+      // reset this client's displayed read count
+      dispatch(resetUnread(conversationId))
+
+      readMessage(convoData)
+    }
   } catch (error) {
     console.error(error)
   }

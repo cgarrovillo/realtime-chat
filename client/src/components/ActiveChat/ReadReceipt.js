@@ -21,11 +21,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 // displays only if the last message is sent by the current user
-const ReadReceipt = ({ otherUser, seen }) => {
+const ReadReceipt = ({ otherUser, message }) => {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
-      {!seen ? (
+      {!message.seen ? (
         <Typography className={classes.unreadMessage}>Unread</Typography>
       ) : (
         <Avatar

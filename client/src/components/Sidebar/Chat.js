@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Box } from "@material-ui/core";
-import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
-import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
+import { setActiveChat } from "../../store/activeConversation";
+import { BadgeAvatar, ChatContent, UnreadCount } from "../Sidebar";
 
 const styles = {
   root: {
@@ -20,7 +20,15 @@ const styles = {
 };
 
 class Chat extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { activeChat: "" }
+  }
+
   handleClick = async (conversation) => {
+    this.setState({
+      activeChat: conversation.otherUser.username
+    })
     await this.props.setActiveChat(conversation.otherUser.username);
   };
 
@@ -38,7 +46,8 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} />
+        <ChatContent conversation={this.props.conversation} activeChat={this.state.activeChat} />
+        <UnreadCount conversation={this.props.conversation} activeChat={this.state.activeChat} />
       </Box>
     );
   }
