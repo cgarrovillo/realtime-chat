@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginLeft: 20,
+    marginLeft: theme.spacing(2),
     flexGrow: 1,
   },
   username: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: theme.palette.text.secondary,
     letterSpacing: -0.17,
   },
   previewTextUnread: {

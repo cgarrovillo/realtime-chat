@@ -12,7 +12,6 @@ export const addMessageToStore = (state, payload) => {
       unreadCount: 0
     };
     // add an unreadCount property on the convo,  but based off of messages with a "seen" property false
-    // ---
     if (sender) newConvo.unreadCount++
 
     return [newConvo, ...state];
@@ -23,8 +22,6 @@ export const addMessageToStore = (state, payload) => {
   convoCopy.messages.push(message);
   convoCopy.latestMessageText = message.text;
 
-  // const unreadMessageCount = convoCopy.messages.filter(message => !message.seen).length
-  // convoCopy.unreadCount = unreadMessageCount
   if (sender) convoCopy.unreadCount++
   
   stateCopy[existingConversationIndex] = convoCopy

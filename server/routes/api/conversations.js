@@ -81,7 +81,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/read', async (req, res, next) => {
+router.patch('/read', async (req, res, next) => {
   // client calling API = user;  sender = otherUser
   const { otherUser, conversationId } = req.body;
 

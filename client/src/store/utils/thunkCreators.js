@@ -137,7 +137,7 @@ export const setMessageRead = (user, otherUser, conversationId) => async (dispat
     // Should be similar to postMessage in functionality;  API call first, Socket second
     // socket emit
     const convoData = { user, otherUser, conversationId }
-    const { status } = await axios.post(`/api/conversations/read`, convoData)
+    const { status } = await axios.patch(`/api/conversations/read`, convoData)
     
     if (status === 204) {
       // reset this client's displayed read count

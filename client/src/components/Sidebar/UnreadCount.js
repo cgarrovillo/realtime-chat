@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   root: {
     marginLeft: 18,
-    marginRight: 18,
+    marginRight: theme.spacing(3),
   },
   unreadCount: {
-    backgroundColor: '#3A8DFF',
+    backgroundColor: theme.palette.primary.main,
     borderRadius: '20px',
   },
   unreadCountLabel: {
