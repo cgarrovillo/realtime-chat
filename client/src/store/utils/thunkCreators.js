@@ -1,10 +1,11 @@
 import axios from "axios";
 import socket from "../../utils/socket";
 import {
-  gotConversations,
+  getConversations,
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  resetUnread
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -80,7 +81,7 @@ export const logout = (id) => async (dispatch) => {
 export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
-    dispatch(gotConversations(data));
+    dispatch(getConversations(data));
   } catch (error) {
     console.error(error);
   }
@@ -99,7 +100,11 @@ const sendMessage = (data, body) => {
   });
 };
 
-// message format to send: {recipientId, text, conversationId}
+const readMessage = (data) => {
+  socket.emit("read-message", data)
+}
+
+// message format to send: {text, recipientId, conversationId, sender}
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
   try {
@@ -125,3 +130,22 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const setMessageRead = (user, otherUser, conversationId) => async (dispatch) => {
+  try {
+    // API call to /messages to change the read status of a message
+    // Should be similar to postMessage in functionality;  API call first, Socket second
+    // socket emit
+    const convoData = { user, otherUser, conversationId }
+    const { status } = await axios.patch(`/api/conversations/read`, convoData)
+    
+    if (status === 204) {
+      // reset this client's displayed read count
+      dispatch(resetUnread(conversationId))
+
+      readMessage(convoData)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}

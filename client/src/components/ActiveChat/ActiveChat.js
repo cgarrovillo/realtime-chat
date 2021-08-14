@@ -35,9 +35,8 @@ const ActiveChat = (props) => {
           />
           <Box className={classes.chatContainer}>
             <Messages
-              messages={conversation.messages}
-              otherUser={conversation.otherUser}
-              userId={user.id}
+              conversation={conversation}
+              user={user}
             />
             <Input
               otherUser={conversation.otherUser}
