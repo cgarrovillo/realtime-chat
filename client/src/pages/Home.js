@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 
 const Home = ({ user, logout, fetchConversations }) => {
   const classes = useStyles();
-  const isMounted = useRef(false);
+  const currentProps = useRef({})
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogout = useCallback(async () => {
@@ -24,17 +24,15 @@ const Home = ({ user, logout, fetchConversations }) => {
   }, [logout, user]);
 
   useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-    } else {
-      // set the logged in state only when the user prop changes and the component is mounted
-      setIsLoggedIn(true);
+    if (currentProps.current.user !== user) {
+      setIsLoggedIn(true)
     }
   }, [user]);
 
   useEffect(() => {
     fetchConversations();
-  }, [fetchConversations]);
+    currentProps.current = { user }
+  }, [fetchConversations, user]);
 
   if (!user.id) {
     // If we were previously logged in, redirect to login instead of register
@@ -45,7 +43,6 @@ const Home = ({ user, logout, fetchConversations }) => {
 
   return (
     <>
-      {/* logout button will eventually be in a dropdown next to username */}
       <Button className={classes.root} onClick={handleLogout}>
         Logout
       </Button>

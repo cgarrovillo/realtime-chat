@@ -22,11 +22,10 @@ const useStyles = makeStyles(theme => ({
 const Chat = ({ conversation, activeChat, setActiveChat }) => {
   const classes = useStyles();
   const { otherUser } = conversation;
-  const { username } = otherUser;
 
   const handleClick = useCallback(async () => {
-    setActiveChat(username);
-  }, [username, setActiveChat]);
+    setActiveChat(otherUser.username);
+  }, [otherUser.username, setActiveChat]);
 
   return (
     <Box onClick={handleClick} className={classes.root}>
