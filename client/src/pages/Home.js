@@ -1,76 +1,73 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { Grid, CssBaseline, Button } from "@material-ui/core";
-import { SidebarContainer } from "../components/Sidebar";
-import { ActiveChat } from "../components/ActiveChat";
-import { logout, fetchConversations } from "../store/utils/thunkCreators";
-import { clearOnLogout } from "../store/index";
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Grid, CssBaseline, Button } from '@material-ui/core';
+import { SidebarContainer } from '../components/Sidebar';
+import { ActiveChat } from '../components/ActiveChat';
+import { logout, fetchConversations } from '../store/utils/thunkCreators';
+import { clearOnLogout } from '../store/index';
 
-const styles = {
+const useStyles = makeStyles({
   root: {
-    height: "97vh",
+    height: 'max-content',
   },
+});
+
+const Home = ({ user, logout, fetchConversations }) => {
+  const classes = useStyles();
+  const isMounted = useRef(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogout = useCallback(async () => {
+    await logout(user.id);
+  }, [logout, user]);
+
+  useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+    } else {
+      // set the logged in state only when the user prop changes and the component is mounted
+      setIsLoggedIn(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+  if (!user.id) {
+    // If we were previously logged in, redirect to login instead of register
+    if (isLoggedIn) return <Redirect to='/login' />;
+
+    return <Redirect to='/register' />;
+  }
+
+  return (
+    <>
+      {/* logout button will eventually be in a dropdown next to username */}
+      <Button className={classes.root} onClick={handleLogout}>
+        Logout
+      </Button>
+      <Grid container component='main' className={classes.root}>
+        <CssBaseline />
+        <SidebarContainer />
+        <ActiveChat />
+      </Grid>
+    </>
+  );
 };
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoggedIn: false,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.user.id !== prevProps.user.id) {
-      this.setState({
-        isLoggedIn: true,
-      });
-    }
-  }
-
-  componentDidMount() {
-    this.props.fetchConversations();
-  }
-
-  handleLogout = async () => {
-    await this.props.logout(this.props.user.id);
-  };
-
-  render() {
-    const { classes } = this.props;
-    if (!this.props.user.id) {
-      // If we were previously logged in, redirect to login instead of register
-      if (this.state.isLoggedIn) return <Redirect to="/login" />;
-      return <Redirect to="/register" />;
-    }
-    return (
-      <>
-        {/* logout button will eventually be in a dropdown next to username */}
-        <Button className={classes.logout} onClick={this.handleLogout}>
-          Logout
-        </Button>
-        <Grid container component="main" className={classes.root}>
-          <CssBaseline />
-          <SidebarContainer />
-          <ActiveChat />
-        </Grid>
-      </>
-    );
-  }
-}
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.user,
     conversations: state.conversations,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    logout: (id) => {
+    logout: id => {
       dispatch(logout(id));
       dispatch(clearOnLogout());
     },
@@ -80,7 +77,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
