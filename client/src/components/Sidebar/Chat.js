@@ -5,19 +5,19 @@ import { connect } from 'react-redux';
 import { setActiveChat } from '../../store/activeConversation';
 import { BadgeAvatar, ChatContent, UnreadCount } from '../Sidebar';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     borderRadius: 8,
     height: 80,
     boxShadow: '0 2px 10px 0 rgba(88,133,196,0.05)',
-    marginBottom: 10,
+    marginBottom: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
       cursor: 'grab',
     },
   },
-});
+}));
 
 const Chat = ({ conversation, activeChat, setActiveChat }) => {
   const classes = useStyles();
