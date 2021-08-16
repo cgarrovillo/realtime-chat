@@ -6,7 +6,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     justifyContent: "space-between",
-    marginLeft: 20,
+    alignItems: "center",
+    marginLeft: theme.spacing(2),
     flexGrow: 1,
   },
   username: {
@@ -15,24 +16,31 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: theme.palette.text.secondary,
     letterSpacing: -0.17,
   },
+  previewTextUnread: {
+    fontSize: 12,
+    color: "#000",
+    letterSpacing: -0.17,
+    fontWeight: "bold"
+  }
 }));
 
 const ChatContent = (props) => {
   const classes = useStyles();
 
-  const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { conversation, activeChat } = props;
+  const { latestMessageText, otherUser, unreadCount } = conversation;
+  const { username } = otherUser
 
   return (
     <Box className={classes.root}>
       <Box>
         <Typography className={classes.username}>
-          {otherUser.username}
+          {username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography className={(unreadCount > 0 && username !== activeChat) ? classes.previewTextUnread : classes.previewText}>
           {latestMessageText}
         </Typography>
       </Box>
