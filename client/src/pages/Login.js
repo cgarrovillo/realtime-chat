@@ -9,7 +9,7 @@ import {
   FormControl,
   TextField,
 } from "@material-ui/core";
-import { login } from "./store/utils/thunkCreators";
+import { login } from "../store/utils/thunkCreators";
 
 const Login = (props) => {
   const history = useHistory();

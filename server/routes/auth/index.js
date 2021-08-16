@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { User } = require("../../db/models");
-const jwt = require("jsonwebtoken");
+const jwtSign = require("../../helpers/jwtSign")
 
 router.post("/register", async (req, res, next) => {
   try {
@@ -21,13 +21,9 @@ router.post("/register", async (req, res, next) => {
 
     const user = await User.create(req.body);
 
-    const token = jwt.sign(
-      { id: user.dataValues.id },
-      process.env.SESSION_SECRET,
-      { expiresIn: 86400 }
-    );
+    const token = jwtSign(user.getDataValue('id'))
     res.json({
-      ...user.dataValues,
+      ...user.get(),
       token,
     });
   } catch (error) {
@@ -53,19 +49,13 @@ router.post("/login", async (req, res, next) => {
     });
 
     if (!user) {
-      console.log({ error: `No user found for username: ${username}` });
       res.status(401).json({ error: "Wrong username and/or password" });
     } else if (!user.correctPassword(password)) {
-      console.log({ error: "Wrong username and/or password" });
       res.status(401).json({ error: "Wrong username and/or password" });
     } else {
-      const token = jwt.sign(
-        { id: user.dataValues.id },
-        process.env.SESSION_SECRET,
-        { expiresIn: 86400 }
-      );
+      const token = jwtSign(user.getDataValue('id'))
       res.json({
-        ...user.dataValues,
+        ...user.get(),
         token,
       });
     }
@@ -74,11 +64,11 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.delete("/logout", (req, res, next) => {
+router.delete("/logout", (req, res) => {
   res.sendStatus(204);
 });
 
-router.get("/user", (req, res, next) => {
+router.get("/user", (req, res) => {
   if (req.user) {
     return res.json(req.user);
   } else {

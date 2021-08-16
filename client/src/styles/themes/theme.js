@@ -1,6 +1,6 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from "@material-ui/core";
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   typography: {
     fontFamily: "Open Sans, sans-serif",
     fontSize: 14,
@@ -19,6 +19,9 @@ export const theme = createMuiTheme({
   },
   palette: {
     primary: { main: "#3A8DFF" },
-    secondary: { main: "#B0B0B0" }
+    secondary: { main: "#B0B0B0" },
+    text: {
+      secondary: '#9CADC8'
+    }
   }
 });
