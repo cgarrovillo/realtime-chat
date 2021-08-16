@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import { theme } from "./themes/theme";
+import { theme } from "./styles/themes/theme";
 import Routes from "./routes";
 
 function App() {
